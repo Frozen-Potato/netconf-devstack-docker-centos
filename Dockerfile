@@ -1,12 +1,12 @@
 FROM centos:7
 
-# Install dependencies
-RUN yum install -y epel-release && \
-    yum install -y tmux && \
+RUN yum -y update && \
+    yum -y install epel-release && \
+    yum -y install tmux && \
     mkdir -p /output && \
     cp /usr/bin/tmux /output/tmux && \
     chmod +x /output/tmux && \
-    yum clean all
+    yum clean all && \
+    rm -rf /var/cache/yum
 
-# Dummy command to keep container alive (optional)
 CMD ["sleep", "60"]
