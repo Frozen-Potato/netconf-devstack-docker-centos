@@ -65,6 +65,7 @@ RUN cd /tmp && \
 RUN cd /tmp && \
     git clone https://github.com/CESNET/libyang.git && \
     cd libyang && git checkout v2.1.148 && \
+    echo "libyang commit:" && git log -1 && \
     mkdir build && cd build && \
     /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
