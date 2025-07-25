@@ -29,6 +29,7 @@ RUN yum -y groupinstall "Development Tools" && \
         ncurses-devel \
         openssl-devel \
         pcre-devel \
+        pcre2-devel \ 
         curl-devel \
         expat-devel \
         gettext-devel \
