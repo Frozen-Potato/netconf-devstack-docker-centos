@@ -120,7 +120,8 @@ RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf && \
     ldconfig
 
 # Verify installations
-RUN pkg-config --exists libyang && \
+RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig && \
+    pkg-config --exists libyang && \
     pkg-config --exists libssh && \
     pkg-config --exists libnetconf2 && \
     echo "All libraries installed successfully"
