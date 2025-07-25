@@ -1,87 +1,60 @@
+# tmux-docker-centos7
 
-# 🐧 Tmux Binary Builder for CentOS 7
+This project builds a static `tmux` binary and a NETCONF development stack (libnetconf2, libssh, libyang, OpenSSL) on a CentOS 7 base using Docker — fully offline-compatible.
 
-This repository provides a Docker-based method for building and extracting a standalone `tmux` binary compatible with CentOS 7 systems. It is especially useful for air-gapped or proxy-restricted environments (such as VDIs) where installing `tmux` via `yum` or `dnf` isn't feasible.
+## Features
 
----
+- ✅ Builds `tmux` from CentOS 7 with EPEL support
+- ✅ Installs and exports `tmux` binary to `/output/tmux`
+- ✅ Builds and installs:
+  - `OpenSSL 1.1.1w`
+  - `libyang v2.1.148`
+  - `libssh 0.10.6`
+  - `libnetconf2 v2.1.34`
+- ✅ Extracts built `.so` libraries and `.h` headers to `/output/libs` and `/output/include`
+- ✅ Uses `vault.centos.org` to avoid mirrorlist resolution issues (fully air-gapped friendly)
 
-## 📦 Docker Image
-
-Prebuilt image is available on Docker Hub:
-
-```
-docker pull frozenpotato/tmux-centos7:latest
-```
-
----
-
-## 🔧 What This Image Does
-
-- Uses `centos:7` as the base image
-- Installs `epel-release` manually from a known-safe archive URL (included in repo)
-- Installs `tmux` from EPEL
-- Extracts the `/usr/bin/tmux` binary into `/output/tmux` inside the image
-
----
-
-## 🧰 How to Extract `tmux` Binary
+## Build Instructions
 
 ```bash
-# 1. Pull the image
-docker pull frozenpotato/tmux-centos7:latest
-
-# 2. Create a container from the image
-docker create --name tmuxbox frozenpotato/tmux-centos7:latest
-
-# 3. Copy the tmux binary out of the container
-docker cp tmuxbox:/output/tmux ./tmux
-
-# 4. Clean up the container
-docker rm -f tmuxbox
+docker build -t tmux-centos-netconf .
 ```
 
----
-
-## 🛠️ How to Install tmux on Your System
+## Extract Files from Container
 
 ```bash
-# Make it executable
-chmod +x ./tmux
+# Start container
+docker run --name tmux-netconf-inst tmux-centos-netconf
 
-# Move to a directory in your PATH
-sudo mv ./tmux /usr/local/bin/
+# Copy built artifacts
+docker cp tmux-netconf-inst:/output ./output
 
-# Verify installation
-tmux -V
+# Cleanup
+docker rm tmux-netconf-inst
 ```
 
----
+## Contents of `/output/`
 
-## 🧱 Included Files
+- `/output/tmux` — statically built tmux binary
+- `/output/libs/` — all required `.so` files:
+  - `libnetconf2.so`, `libyang.so`, `libssh.so`, `libssl.so`, `libcrypto.so`
+- `/output/include/` — headers for all libraries, ready for development
 
-- `Dockerfile` — the build instructions
-- `epel-release-7-14.noarch.rpm` — static EPEL installer for CentOS 7 (copied into container)
+## Usage
 
----
-
-## 🔄 Build It Yourself (Optional)
+On your CentOS 7 host:
 
 ```bash
-# Build the image locally
-docker build -t tmux-centos7 .
+# Copy libraries
+sudo cp output/libs/* /usr/local/lib/
+sudo ldconfig
+
+# Copy headers
+sudo cp -r output/include/* /usr/local/include/
 ```
 
----
+You can now build and run C/C++ applications that depend on libnetconf2, libssh, libyang, and OpenSSL 1.1.1 without needing external internet access.
 
-## 📝 Notes
+## License
 
-- This image uses `vault.centos.org` instead of CentOS mirrorlists to avoid DNS failures in `buildx` environments.
-- The `epel-release` RPM is bundled with the repo to eliminate external fetch during CI/CD builds.
-- Tested with GitHub Actions and `docker buildx`.
-
----
-
-## 📜 License
-
-This repository and Dockerfile are licensed under the MIT License.  
-Binary software (tmux, epel-release) follows their respective upstream licenses.
+MIT
