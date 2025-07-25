@@ -1,4 +1,4 @@
-# tmux-docker-centos7
+# tmux-netconf-centos7
 
 This project builds a static `tmux` binary and a NETCONF development stack (libnetconf2, libssh, libyang, OpenSSL) on a CentOS 7 base using Docker — fully offline-compatible.
 
