@@ -60,14 +60,13 @@ RUN cd /tmp && \
     ldconfig && \
     cd / && \
     rm -rf /tmp/openssl*
-
+    
 # Build libyang (v2.1.148)
 RUN cd /tmp && \
     git clone https://github.com/CESNET/libyang.git && \
-    cd libyang && \
-    git checkout v2.1.148 && \
+    cd libyang && git checkout v2.1.148 && \
     mkdir build && cd build && \
-    cmake .. \
+    /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DENABLE_LYD_PRIV=ON \
@@ -78,13 +77,14 @@ RUN cd /tmp && \
     cd / && \
     rm -rf /tmp/libyang
 
+
 # Build libssh (0.10.6)
 RUN cd /tmp && \
     git clone https://git.libssh.org/projects/libssh.git && \
     cd libssh && \
     git checkout libssh-0.10.6 && \
     mkdir build && cd build && \
-    cmake .. \
+    /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DOPENSSL_ROOT_DIR=$OPENSSL_PREFIX \
@@ -102,7 +102,7 @@ RUN cd /tmp && \
     cd libnetconf2 && \
     git checkout v2.1.34 && \
     mkdir build && cd build && \
-    cmake .. \
+    /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DENABLE_TESTS=OFF && \
