@@ -62,9 +62,7 @@ RUN cd /tmp && \
     cd / && \
     rm -rf /tmp/openssl*
     
-# Build libyang (v2.1.148)
-RUN cd /tmp && \
-    git clone https://github.com/CESNET/libyang.git && \
+RUN git clone https://github.com/CESNET/libyang.git && \
     cd libyang && git checkout v2.1.148 && \
     echo "libyang commit:" && git log -1 && \
     mkdir build && cd build && \
@@ -75,16 +73,19 @@ RUN cd /tmp && \
         -DENABLE_TESTS=OFF && \
     make -j$(nproc) && \
     make install && \
+    echo "Installed files in /usr/local/lib:" && \
+    find /usr/local/lib -name "libyang*" && \
+    echo "Headers in /usr/local/include/libyang:" && \
+    find /usr/local/include/libyang -name "*.h" && \
     ldconfig && \
-    cd / && \
-    rm -rf /tmp/libyang
-
+    cd / && rm -rf /tmp/libyang
 
 # Build libssh (0.10.6)
 RUN cd /tmp && \
     git clone https://git.libssh.org/projects/libssh.git && \
     cd libssh && \
     git checkout libssh-0.10.6 && \
+    echo "libssh commit:" && git log -1 && \
     mkdir build && cd build && \
     /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -94,15 +95,16 @@ RUN cd /tmp && \
         -DWITH_TESTING=OFF && \
     make -j$(nproc) && \
     make install && \
+    echo "Installed libssh in /usr/local/lib:" && find /usr/local/lib -name "libssh*" && \
+    echo "Headers in /usr/local/include/libssh:" && find /usr/local/include -name "libssh*.h" && \
     ldconfig && \
-    cd / && \
-    rm -rf /tmp/libssh
-
+    
 # Build libnetconf2 (v2.1.34)
 RUN cd /tmp && \
     git clone https://github.com/CESNET/libnetconf2.git && \
     cd libnetconf2 && \
     git checkout v2.1.34 && \
+    echo "libnetconf2 commit:" && git log -1 && \
     mkdir build && cd build && \
     /usr/bin/cmake3 .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -110,9 +112,12 @@ RUN cd /tmp && \
         -DENABLE_TESTS=OFF && \
     make -j$(nproc) && \
     make install && \
+    echo "Installed libnetconf2 in /usr/local/lib:" && find /usr/local/lib -name "libnetconf2*" && \
+    echo "Headers in /usr/local/include/libnetconf2:" && find /usr/local/include -name "libnetconf2*.h" && \
     ldconfig && \
     cd / && \
     rm -rf /tmp/libnetconf2
+
 
 # Set up library environment
 RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf && \
