@@ -98,6 +98,8 @@ RUN cd /tmp && \
     echo "Installed libssh in /usr/local/lib:" && find /usr/local/lib -name "libssh*" && \
     echo "Headers in /usr/local/include/libssh:" && find /usr/local/include -name "libssh*.h" && \
     ldconfig && \
+    cd / && \
+    rm -rf /tmp/libssh
     
 # Build libnetconf2 (v2.1.34)
 RUN cd /tmp && \
