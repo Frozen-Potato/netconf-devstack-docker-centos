@@ -74,7 +74,7 @@ RUN git clone https://github.com/CESNET/libyang.git && \
     make -j$(nproc) && \
     make install && \
     echo "Installed files in /usr/local/lib:" && \
-    find /usr/local/lib -name "libyang*" && \
+    find /usr/local/lib64 -name "libyang*" && \
     echo "Headers in /usr/local/include/libyang:" && \
     find /usr/local/include/libyang -name "*.h" && \
     ldconfig && \
@@ -95,7 +95,7 @@ RUN cd /tmp && \
         -DWITH_TESTING=OFF && \
     make -j$(nproc) && \
     make install && \
-    echo "Installed libssh in /usr/local/lib:" && find /usr/local/lib -name "libssh*" && \
+    echo "Installed libssh in /usr/local/lib:" && find /usr/local/lib64 -name "libssh*" && \
     echo "Headers in /usr/local/include/libssh:" && find /usr/local/include -name "libssh*.h" && \
     ldconfig && \
     cd / && \
@@ -114,7 +114,7 @@ RUN cd /tmp && \
         -DENABLE_TESTS=OFF && \
     make -j$(nproc) && \
     make install && \
-    echo "Installed libnetconf2 in /usr/local/lib:" && find /usr/local/lib -name "libnetconf2*" && \
+    echo "Installed libnetconf2 in /usr/local/lib:" && find /usr/local/lib64 -name "libnetconf2*" && \
     echo "Headers in /usr/local/include/libnetconf2:" && find /usr/local/include -name "libnetconf2*.h" && \
     ldconfig && \
     cd / && \
@@ -136,10 +136,10 @@ RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig &
 # Copy built outputs
 RUN mkdir -p /output/include /output/lib /output/pkgconfig && \
     cp -r /usr/local/include/* /output/include/ && \
-    cp -P /usr/local/lib/libyang*.so* /output/lib/ && \
-    cp -P /usr/local/lib/libnetconf2*.so* /output/lib/ && \
-    cp -P /usr/local/lib/libssh*.so* /output/lib/ && \
-    cp -r /usr/local/lib/pkgconfig/* /output/pkgconfig/ || true
+    cp -P /usr/local/lib64/libyang*.so* /output/lib/ && \
+    cp -P /usr/local/lib64/libnetconf2*.so* /output/lib/ && \
+    cp -P /usr/local/lib64/libssh*.so* /output/lib/ && \
+    cp -r /usr/local/lib64/pkgconfig/* /output/pkgconfig/ || true
 
 # Default command - use bash instead of sleep for interactive use
 CMD ["/bin/bash"]
