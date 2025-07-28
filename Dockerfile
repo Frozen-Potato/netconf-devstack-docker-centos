@@ -126,8 +126,13 @@ RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig &
     pkg-config --exists libnetconf2 && \
     echo "All libraries installed successfully"
 
-# Work directory for custom source
-WORKDIR /app
+# Copy built outputs
+RUN mkdir -p /output/include /output/lib /output/pkgconfig && \
+    cp -r /usr/local/include/* /output/include/ && \
+    cp -P /usr/local/lib/libyang*.so* /output/lib/ && \
+    cp -P /usr/local/lib/libnetconf2*.so* /output/lib/ && \
+    cp -P /usr/local/lib/libssh*.so* /output/lib/ && \
+    cp -r /usr/local/lib/pkgconfig/* /output/pkgconfig/ || true
 
 # Default command - use bash instead of sleep for interactive use
 CMD ["/bin/bash"]
